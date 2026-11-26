@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-900 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformación 90 Días - Plan de Hipertrofia</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Tools & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tone.js for web audio alerts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                            accent: '#f59e0b',
+                            highlight: '#10b981'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .badge-glow {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+    </style>
+</head>
+<body class="h-full font-sans antialiased bg-slate-950 text-slate-100 flex flex-col justify-between overflow-x-hidden">
+
+    <!-- TOP HEADER -->
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800 px-4 py-3 sm:px-6">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                    <i class="fa-solid fa-dumbbell text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight text-white flex items-center gap-2">
+                        TRANSFORMACIÓN <span class="text-brand-500 text-xs px-2 py-0.5 rounded-md bg-brand-500/10 border border-brand-500/20">90 DÍAS</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Atleta 36 Años • Enfoque Hipertrofia & Salud Articular</p>
+                </div>
+            </div>
+
+            <!-- Header Quick Stats -->
+            <div class="hidden md:flex items-center space-x-6 text-sm">
+                <div class="flex items-center space-x-2">
+                    <span class="text-slate-400"><i class="fa-regular fa-calendar-check text-brand-500"></i> Progreso:</span>
+                    <span id="headerProgressPct" class="font-bold text-white">0%</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-slate-400"><i class="fa-solid fa-fire text-amber-500"></i> Racha:</span>
+                    <span id="headerStreak" class="font-bold text-white">0 días</span>
+                </div>
+                <button id="btnOpenSettings" class="text-slate-400 hover:text-white transition p-2 rounded-lg hover:bg-slate-800">
+                    <i class="fa-solid fa-gear text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Quick Config Trigger -->
+            <div class="md:hidden flex items-center space-x-2">
+                <button id="btnOpenSettingsMobile" class="p-2 text-slate-300 hover:text-white bg-slate-800 rounded-lg">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- NOTIFICATION ALERT BAR (IF TODAY IS WORKOUT DAY & NOT DONE) -->
+    <div id="dailyReminderBar" class="hidden bg-amber-500/10 border-b border-amber-500/20 px-4 py-2 text-xs sm:text-sm text-amber-300">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-bell animate-bounce text-amber-400"></i>
+                <span><strong>¡Recordatorio del Día!</strong> Tienes un entrenamiento programado sin completar hoy. ¡No rompas la racha!</span>
+            </div>
+            <button onclick="app.navigateTo('workout')" class="bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded hover:bg-amber-400 transition text-xs">
+                Ir a Entrenar
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+        <!-- TAB NAVIGATION -->
+        <nav class="flex space-x-2 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800 overflow-x-auto" id="mainTabs">
+            <button data-tab="dashboard" class="tab-btn active flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition flex items-center justify-center space-x-2 bg-brand-600 text-white shadow">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Panel Principal</span>
+            </button>
+            <button data-tab="workout" class="tab-btn flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition flex items-center justify-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                <i class="fa-solid fa-dumbbell"></i>
+                <span>Rutina de Hoy</span>
+            </button>
+            <button data-tab="calendar" class="tab-btn flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition flex items-center justify-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                <i class="fa-regular fa-calendar-days"></i>
+                <span>Calendario 90 Días</span>
+            </button>
+            <button data-tab="nutrition" class="tab-btn flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition flex items-center justify-center space-x-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Nutrición & Salud</span>
+            </button>
+        </nav>
+
+        <!-- VIEW 1: DASHBOARD -->
+        <section id="view-dashboard" class="view-content space-y-6">
+            <!-- SETUP BANNER (If not setup yet) -->
+            <div id="setupPromptCard" class="hidden glass-panel rounded-2xl p-6 border-l-4 border-l-brand-500 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-white mb-1">¡Bienvenido a tu Reto de 3 Meses!</h2>
+                    <p class="text-slate-300 text-sm">Configura la fecha de inicio de tu reto y tus días disponibles para estructurar tu calendario personalizado.</p>
+                </div>
+                <button onclick="app.openSettingsModal()" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg transition flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-sliders"></i> Configurar Plan
+                </button>
+            </div>
+
+            <!-- TOP STATS CARDS -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass-panel p-4 rounded-2xl flex flex-col">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Día Actual</span>
+                    <div class="flex items-baseline space-x-2 mt-auto">
+                        <span id="dashCurrentDay" class="text-3xl font-extrabold text-white">1</span>
+                        <span class="text-xs text-slate-400">/ 90</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div id="dashDayProgressBar" class="bg-brand-500 h-full rounded-full" style="width: 1%"></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-4 rounded-2xl flex flex-col">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Fase Actual</span>
+                    <span id="dashCurrentPhase" class="text-lg font-bold text-brand-400 truncate mt-auto">Mes 1: Adaptación</span>
+                    <span id="dashPhaseWeeks" class="text-xs text-slate-400 mt-1">Semanas 1-4 (10-12 reps)</span>
+                </div>
+
+                <div class="glass-panel p-4 rounded-2xl flex flex-col">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Días Completados</span>
+                    <div class="flex items-baseline space-x-2 mt-auto">
+                        <span id="dashCompletedDays" class="text-3xl font-extrabold text-emerald-400">0</span>
+                        <span class="text-xs text-slate-400">sesiones</span>
+                    </div>
+                    <span id="dashRemainingDays" class="text-xs text-slate-400 mt-1">90 días restantes</span>
+                </div>
+
+                <div class="glass-panel p-4 rounded-2xl flex flex-col">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Tiempo Dedicado</span>
+                    <div class="flex items-baseline space-x-2 mt-auto">
+                        <span id="dashTotalTime" class="text-3xl font-extrabold text-amber-400">0</span>
+                        <span class="text-xs text-slate-400">mins total</span>
+                    </div>
+                    <span id="dashDailyTarget" class="text-xs text-slate-400 mt-1">Meta: 60m / día</span>
+                </div>
+            </div>
+
+            <!-- TODAY SUMMARY CARD & QUICK START -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Today Workout Card -->
+                <div class="lg:col-span-2 glass-panel rounded-2xl p-6 flex flex-col justify-between border border-slate-800 relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                        <i class="fa-solid fa-person-running text-[180px] text-white"></i>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-widest text-brand-400 bg-brand-500/10 border border-brand-500/20 px-2.5 py-1 rounded-md">Entrenamiento De Hoy</span>
+                                <h3 id="dashTodayTitle" class="text-2xl font-bold text-white mt-2">Día 1: Pectoral & Brazos</h3>
+                                <p id="dashTodayFocus" class="text-sm text-slate-300 mt-1">Enfoque: Bombeo intenso en todo el tren superior frontal.</p>
+                            </div>
+                            <span id="dashTodayStatusBadge" class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                                <i class="fa-solid fa-clock"></i> Pendiente
+                            </span>
+                        </div>
+
+                        <!-- Exercise Count Pills -->
+                        <div id="dashTodayExerciseList" class="flex flex-wrap gap-2 my-4">
+                            <!-- Injected JS -->
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 mt-4">
+                        <div class="flex items-center space-x-4 text-xs text-slate-400">
+                            <span><i class="fa-regular fa-clock text-slate-300"></i> ~60 min</span>
+                            <span><i class="fa-solid fa-layer-group text-slate-300"></i> <span id="dashExerciseCount">7</span> Ejercicios</span>
+                            <span><i class="fa-solid fa-repeat text-slate-300"></i> Rango: <span id="dashRepRange">10-12</span> reps</span>
+                        </div>
+                        <button onclick="app.navigateTo('workout')" class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-brand-500/25 transition flex items-center justify-center gap-2">
+                            <span>Comenzar Rutina</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Phase Info Card -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between border border-slate-800">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2 mb-3">
+                            <i class="fa-solid fa-bullseye text-brand-500"></i> Guía de la Fase Activa
+                        </h3>
+                        <div id="dashPhaseDetails" class="space-y-3 text-sm text-slate-300">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </div>
+                    <div class="mt-6 p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400">
+                        <i class="fa-solid fa-shield-halved text-amber-400 mr-1"></i>
+                        <span class="text-slate-300">Tip de articulaciones (36 años):</span> Calienta 5-10m antes de iniciar y mantén controlado el tiempo bajo tensión.
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOTIVATION & TIPS BANNER -->
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col sm:flex-row items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-sm sm:text-base">Consejo Progresivo para Atletas</h4>
+                    <p id="dailyMotivationalTip" class="text-slate-300 text-xs sm:text-sm mt-0.5">"La constancia le gana a la intensidad desmedida. Registra tus repeticiones y enfócate en sentir el grupo muscular principal en cada repetición."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: WORKOUT (RUTINA DE HOY) -->
+        <section id="view-workout" class="view-content space-y-6 hidden">
+            <!-- Header Routine Info -->
+            <div class="glass-panel rounded-2xl p-6 border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <span id="workoutDayPhaseTag" class="text-xs font-bold uppercase tracking-wider text-brand-400">Fase 1 • Semana 1</span>
+                    <h2 id="workoutTitle" class="text-2xl font-black text-white mt-1">Cargando Rutina...</h2>
+                    <p id="workoutFocus" class="text-sm text-slate-300">Enfoque del día</p>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <div class="text-right">
+                        <span class="text-xs text-slate-400 block">Progreso Rutina</span>
+                        <span id="workoutProgressText" class="font-extrabold text-white text-lg">0 / 7 completados</span>
+                    </div>
+                    <button id="btnCompleteWorkout" onclick="app.finishTodayWorkout()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check"></i> Finalizar Día
+                    </button>
+                </div>
+            </div>
+
+            <!-- REST TIMER BAR -->
+            <div id="restTimerContainer" class="glass-panel p-4 rounded-xl border border-brand-500/30 bg-brand-950/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-brand-600/30 text-brand-400 flex items-center justify-center font-bold text-lg animate-pulse">
+                        <i class="fa-solid fa-stopwatch"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400 uppercase font-semibold">Temporizador de Descanso</div>
+                        <div class="text-sm font-medium text-slate-200">Recomendado: <span id="restRecommendedTime" class="text-brand-400 font-bold">60-75s</span></div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="timerDisplay" class="text-3xl font-black font-mono text-brand-400">00:00</span>
+                    <div class="flex space-x-2">
+                        <button onclick="app.startRestTimer(60)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg">60s</button>
+                        <button onclick="app.startRestTimer(75)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg">75s</button>
+                        <button onclick="app.startRestTimer(90)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg">90s</button>
+                        <button onclick="app.stopRestTimer()" class="px-3 py-1.5 bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 text-xs font-semibold rounded-lg"><i class="fa-solid fa-stop"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXERCISES LIST CONTAINER -->
+            <div id="exercisesContainer" class="space-y-4">
+                <!-- Injected via JavaScript -->
+            </div>
+        </section>
+
+        <!-- VIEW 3: CALENDAR (90 DAYS) -->
+        <section id="view-calendar" class="view-content space-y-6 hidden">
+            <div class="glass-panel rounded-2xl p-6 border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Calendario del Reto (90 Días)</h2>
+                    <p class="text-sm text-slate-300">Monitorea tus 12 semanas de transformación. Presiona un día para ver detalles.</p>
+                </div>
+                <!-- Legend -->
+                <div class="flex flex-wrap gap-4 text-xs">
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                        <span class="text-slate-300">Completado</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-3 h-3 rounded-full bg-brand-500"></span>
+                        <span class="text-slate-300">Hoy</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-3 h-3 rounded-full bg-slate-700"></span>
+                        <span class="text-slate-300">Programado</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-3 h-3 rounded-full bg-amber-500/40"></span>
+                        <span class="text-slate-300">Descanso Activo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Month Selectors / Tabs -->
+            <div class="flex space-x-2 border-b border-slate-800 pb-2">
+                <button onclick="app.filterCalendarMonth(1)" id="btnMonth1" class="px-4 py-2 rounded-lg text-sm font-bold bg-brand-600 text-white">Mes 1 (Semanas 1-4)</button>
+                <button onclick="app.filterCalendarMonth(2)" id="btnMonth2" class="px-4 py-2 rounded-lg text-sm font-bold bg-slate-800 text-slate-400 hover:text-white">Mes 2 (Semanas 5-8)</button>
+                <button onclick="app.filterCalendarMonth(3)" id="btnMonth3" class="px-4 py-2 rounded-lg text-sm font-bold bg-slate-800 text-slate-400 hover:text-white">Mes 3 (Semanas 9-12)</button>
+            </div>
+
+            <!-- GRID OF DAYS -->
+            <div id="calendarGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
+                <!-- Dynamically Generated -->
+            </div>
+        </section>
+
+        <!-- VIEW 4: NUTRITION & RECOVERY -->
+        <section id="view-nutrition" class="view-content space-y-6 hidden">
+            <div class="glass-panel rounded-2xl p-6 border border-slate-800">
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-apple-whole text-emerald-400"></i> Nutrición & Recuperación para Atletas
+                </h2>
+                <p class="text-sm text-slate-300 mt-1">El entrenamiento estimula, pero la nutrición y el descanso construyen el músculo y protegen tus articulaciones.</p>
+            </div>
+
+            <!-- MACRO CALCULATOR CARD -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-brand-400"></i> Calculadora de Proteína
+                    </h3>
+                    <p class="text-xs text-slate-400">A los 36 años y con alta demanda deportiva, necesitas entre 1.8g y 2.0g de proteína por kg de peso corporal.</p>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Tu Peso Corporal (kg)</label>
+                        <input type="number" id="inputUserWeight" value="80" oninput="app.calculateMacros()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white font-bold focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-slate-400">Proteína Diaria Recomendada:</span>
+                            <span id="calcProtein" class="text-lg font-extrabold text-emerald-400">144 - 160g</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-slate-400">Agua Diaria Mínima:</span>
+                            <span id="calcWater" class="text-sm font-bold text-brand-400">2.8 - 3.2 Litros</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NUTRITION TIPS -->
+                <div class="lg:col-span-2 glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-bowl-food text-amber-400"></i> Pilares Nutricionales del Reto
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+                        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <div class="font-bold text-brand-400 flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-egg"></i> Superávit Calórico Ligero
+                            </div>
+                            <p class="text-slate-300">Consume entre 200 y 300 kcal por encima de tu mantenimiento para permitir hipertrofia sin acumular grasa excesiva.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <div class="font-bold text-emerald-400 flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-fish"></i> Salud Articular (Omega 3 & Colágeno)
+                            </div>
+                            <p class="text-slate-300">Incluye pescados grasos, nueces y suplementación de Colágeno + Vitamina C para proteger tendones al jugar baloncesto y softbol.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <div class="font-bold text-indigo-400 flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-bed"></i> Sueño Reparador (7-8 Horas)
+                            </div>
+                            <p class="text-slate-300">La hormona de crecimiento se libera principalmente en el sueño profundo. Los días de descanso activo son sagrados.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                            <div class="font-bold text-amber-400 flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-bolt"></i> Intra-Entrenamiento
+                            </div>
+                            <p class="text-slate-300">Mantente hidratado con electrolitos durante tus sesiones para evitar calambres y mantener la fuerza en la última serie.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="glass-panel border-t border-slate-800 py-4 px-6 text-center text-xs text-slate-500">
+        <p>Transformación 90 Días © Plan Personalizado de Hipertrofia & Rendimiento Deportivo.</p>
+    </footer>
+
+    <!-- SETTINGS / INITIAL SETUP MODAL -->
+    <div id="settingsModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-panel w-full max-w-lg rounded-2xl p-6 border border-slate-700 space-y-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-brand-500"></i> Configuración del Reto
+                </h3>
+                <button onclick="app.closeSettingsModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="settingsForm" onsubmit="app.saveSettings(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Fecha de Inicio del Reto</label>
+                    <input type="date" id="setupStartDate" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-brand-500" required>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Tiempo Diario para Entrenar</label>
+                    <select id="setupDailyTime" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-brand-500">
+                        <option value="45">45 Minutos (Sesión Rápida)</option>
+                        <option value="60" selected>60 Minutos (Estándar Recomendado)</option>
+                        <option value="75">75 Minutos (Con Estiramiento Amplio)</option>
+                        <option value="90">90 Minutos (Extendido)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-2">Días de Entrenamiento a la Semana (Recomendado 4 días)</label>
+                    <div class="grid grid-cols-7 gap-1.5 text-center text-xs">
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="workoutDay" value="1" class="peer hidden" checked>
+                            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 peer-checked:bg-brand-600 peer-checked:text-white font-bold text-slate-400">Lun</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="workoutDay" value="2" class="peer hidden" checked>
+                            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 peer-checked:bg-brand-600 peer-checked:text-white font-bold text-slate-400">Mar</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="workoutDay" value="3" class="peer hidden">
+                            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 peer-checked:bg-brand-600 peer-checked:text-white font-bold text-slate-400">Mié</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="workoutDay" value="4" class="peer hidden" checked>
+                            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 peer-checked:bg-brand-600 peer-checked:text-white font-bold text-slate-400">Jue</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="workoutDay" value="5" class="peer hidden" checked>
+                            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 peer-checked:bg-brand-600 peer-checked:text-white font-bold text-slate-400">Vie</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="workoutDay" value="6" class="peer hidden">
+                            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 peer-checked:bg-brand-600 peer-checked:text-white font-bold text-slate-400">Sáb</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="workoutDay" value="0" class="peer hidden">
+                            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 peer-checked:bg-brand-600 peer-checked:text-white font-bold text-slate-400">Dom</div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-800 flex justify-end space-x-3">
+                    <button type="button" onclick="app.closeSettingsModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-semibold hover:bg-slate-700 text-sm">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 text-sm bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl shadow-lg transition">Guardar y Organizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EXERCISE DETAILS MODAL -->
+    <div id="exerciseModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-panel w-full max-w-lg rounded-2xl p-6 border border-slate-700 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 id="exModalTitle" class="text-lg font-bold text-white">Nombre del Ejercicio</h3>
+                <button onclick="app.closeExerciseModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="w-full h-48 bg-slate-900 rounded-xl flex items-center justify-center border border-slate-800 overflow-hidden relative" id="exModalGraphicContainer">
+                <!-- SVG Illustration Injected -->
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-brand-400">Técnica & Ejecución</h4>
+                    <p id="exModalInstructions" class="text-xs text-slate-300 leading-relaxed mt-1"></p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400">Tip de Protección Articular (36 Años)</h4>
+                    <p id="exModalJointTip" class="text-xs text-slate-300 leading-relaxed mt-1"></p>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800 flex justify-end">
+                <button onclick="app.closeExerciseModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
+    <script>
+        // DATA STRUCTURE FOR THE EXERCISES AND SPLIT PLAN
+        const MASTER_EXERCISES = {
+            // DIA 1: PECHO Y BRAZOS
+            db_press: {
+                id: 'db_press',
+                name: 'Press de Banca con Mancuernas',
+                target: 'Pectoral Mayor (Medio/Inferior)',
+                svgType: 'chest_press',
+                instructions: 'Acuéstate sobre banca plana. Mantén las escápulas retráctiles (juntas). Baja las mancuernas controladamente formando un ángulo de 45° con tu torso para proteger hombros.',
+                jointTip: 'No abras los codos completamente a 90°. El ángulo de 45° evita el pinzamiento del manguito rotador.'
+            },
+            cable_crossover: {
+                id: 'cable_crossover',
+                name: 'Aperturas en Polea (Cable Crossover)',
+                target: 'Pectoral Interno / Apertura',
+                svgType: 'cable_fly',
+                instructions: 'Ligeramente inclinado hacia adelante. Junta las manos frente al pecho squeeze en la máxima contracción durante 1 segundo.',
+                jointTip: 'Mantén los codos ligeramente flexionados de forma rígida; el movimiento solo ocurre en la articulación del hombro.'
+            },
+            incline_db_press: {
+                id: 'incline_db_press',
+                name: 'Press Inclinado con Mancuernas',
+                target: 'Pectoral Superior',
+                svgType: 'incline_press',
+                instructions: 'Ajusta el banco a 30°-45°. Empuja verticalmente enfocado en la parte alta del pecho.',
+                jointTip: 'Un ángulo superior a 45° transfiere demasiado trabajo al deltoides anterior. Mantén el banco a 30°.'
+            },
+            barbell_curl: {
+                id: 'barbell_curl',
+                name: 'Curl con Barra (o Mancuernas)',
+                target: 'Bíceps Braquial',
+                svgType: 'bicep_curl',
+                instructions: 'Mantén los codos pegados a los costados. Mantén la espalda recta sin balanceos torso.',
+                jointTip: 'Si sientes molestia en las muñecas con barra recta, utiliza una barra Z para un agarre más natural.'
+            },
+            preacher_curl: {
+                id: 'preacher_curl',
+                name: 'Curl Predicador (Concentración)',
+                target: 'Bíceps (Cabeza Corta)',
+                svgType: 'preacher_curl',
+                instructions: 'Apoya firmemente los tríceps en el banco. Sube concentrado y baja en 2-3 segundos completos.',
+                jointTip: 'Evita la hiper-extensión brusca en la parte inferior para proteger el tendón del bíceps.'
+            },
+            tricep_rope: {
+                id: 'tricep_rope',
+                name: 'Jalón de Tríceps con Cuerda',
+                target: 'Tríceps (Cabeza Lateral)',
+                svgType: 'tricep_rope',
+                instructions: 'Extiende completamente los brazos hacia abajo y abre la cuerda al final de la repetición.',
+                jointTip: 'Bloquea tus codos al costado; evita mover el hombro durante la bajada.'
+            },
+            overhead_tricep: {
+                id: 'overhead_tricep',
+                name: 'Extensiones de Tríceps sobre la Cabeza',
+                target: 'Tríceps (Cabeza Larga)',
+                svgType: 'tricep_overhead',
+                instructions: 'Sostén la mancuerna sobre la cabeza con ambas manos. Baja detrás de la nuca manteniendo codos cerrados.',
+                jointTip: 'Asegura la zona lumbar manteniendo el abdomen contraído.'
+            },
+
+            // DIA 2: PIERNA Y ABDOMEN
+            leg_press: {
+                id: 'leg_press',
+                name: 'Prensa de Piernas (Leg Press)',
+                target: 'Cuádriceps & Glúteos',
+                svgType: 'leg_press',
+                instructions: 'Pies a la anchura de hombros. Baja profundo sin descolgar la pelvis del respaldo.',
+                jointTip: 'NUNCA bloquees por completo las rodillas arriba en extensión para prevenir lesiones articulares.'
+            },
+            lunges: {
+                id: 'lunges',
+                name: 'Zancadas (Lunges) con Mancuernas',
+                target: 'Pierna Funcional / Potencia',
+                svgType: 'lunges',
+                instructions: 'Da un paso largo controlando que la rodilla no sobrepase excesivamente la punta del pie.',
+                jointTip: 'Ideal para la estabilidad requerida en baloncesto y sóftbol.'
+            },
+            hamstring_curl: {
+                id: 'hamstring_curl',
+                name: 'Curl Femoral (Acostado o Sentado)',
+                target: 'Isquiotibiales',
+                svgType: 'hamstring_curl',
+                instructions: 'Flexiona las rodillas llevando los talones a los glúteos de forma fluida.',
+                jointTip: 'Protege las rodillas controlando la fase exconcéntrica al bajar.'
+            },
+            calf_raises: {
+                id: 'calf_raises',
+                name: 'Elevación de Talones (Gemelos)',
+                target: 'Sóleo & Gastrocnemio',
+                svgType: 'calf_raise',
+                instructions: 'Extensión completa arriba y pausa de 1 segundo en la estirada.',
+                jointTip: 'Ayuda a prevenir la tendinitis aquilea en deportes de salto.'
+            },
+            plank: {
+                id: 'plank',
+                name: 'Plancha Abdominal (Plank)',
+                target: 'Core & Estabilidad',
+                svgType: 'plank',
+                instructions: 'Cuerpo completamente alineado desde hombros a tobillos. Contrae glúteos y abdomen.',
+                jointTip: 'Mantén la vista abajo para alinear la columna cervical.'
+            },
+            hanging_leg_raises: {
+                id: 'hanging_leg_raises',
+                name: 'Elevación de Piernas Colgado',
+                target: 'Abdomen Inferior',
+                svgType: 'leg_raise',
+                instructions: 'Sujétate de la barra y eleva las rodillas o piernas hacia el pecho sin inercia.',
+                jointTip: 'Evita columpiarte; controla el movimiento desde la pelvis.'
+            },
+
+            // DIA 3: HOMBROS Y TRAPECIOS
+            military_press: {
+                id: 'military_press',
+                name: 'Press Militar con Mancuernas',
+                target: 'Deltoides Anterior y Medio',
+                svgType: 'shoulder_press',
+                instructions: 'Sentado a 90°. Empuja verticalmente rozando el frente de tu rostro.',
+                jointTip: 'No dejes caer los codos por debajo de los hombros en la bajada para no estresar el acromion.'
+            },
+            lateral_raises: {
+                id: 'lateral_raises',
+                name: 'Elevaciones Laterales con Mancuernas',
+                target: 'Deltoides Lateral (Ancho 3D)',
+                svgType: 'lateral_raise',
+                instructions: 'Eleva los brazos hasta la horizontal como si vertieras agua con una jarra.',
+                jointTip: 'No utilices pesos excesivos que te obliguen a encoger el trapecio.'
+            },
+            rear_delt_fly: {
+                id: 'rear_delt_fly',
+                name: 'Elevaciones Posteriores (Pájaro)',
+                target: 'Deltoides Posterior',
+                svgType: 'rear_fly',
+                instructions: 'Inclinado hacia adelante a 45° o en máquina pec-deck invertida. Abre los brazos hacia atrás.',
+                jointTip: 'Clave indispensable para la postura recta y estabilizar el manguito en lanzamientos.'
+            },
+            front_raises: {
+                id: 'front_raises',
+                name: 'Elevaciones Frontales con Disco/Mancuerna',
+                target: 'Deltoides Anterior',
+                svgType: 'front_raise',
+                instructions: 'Eleva el peso al frente hasta la altura de la vista.',
+                jointTip: 'Evita inclinarte hacia atrás al subir.'
+            },
+            shrugs: {
+                id: 'shrugs',
+                name: 'Encogimientos de Hombros (Shrugs)',
+                target: 'Trapecio Superior',
+                svgType: 'shrugs',
+                instructions: 'Encoge los hombros directo hacia las orejas y mantén 1 segundo arriba.',
+                jointTip: 'No rotes las articulaciones del hombro al subir; solo movimiento vertical.'
+            },
+
+            // DIA 4: ESPALDA Y RECORDATORIO BRAZOS
+            lat_pulldown: {
+                id: 'lat_pulldown',
+                name: 'Jalón al Pecho (Agarre Amplio)',
+                target: 'Dorsal Ancho (Espalda en V)',
+                svgType: 'lat_pulldown',
+                instructions: 'Tracciona la barra directo al pecho alto inclinando suavemente el torso hacia atrás.',
+                jointTip: 'NUNCA jales detrás de la nuca; esto causa atrapamiento articular grave.'
+            },
+            seated_row: {
+                id: 'seated_row',
+                name: 'Remo Sentado en Polea',
+                target: 'Dorsal Medio y Romboides',
+                svgType: 'seated_row',
+                instructions: 'Jala el agarre hacia el ombligo apretando las escápulas atrás.',
+                jointTip: 'Mantén la curvatura lumbar natural sin encorvarte al estirar.'
+            },
+            pulldown_pullover: {
+                id: 'pulldown_pullover',
+                name: 'Pullover en Polea Rígida',
+                target: 'Dorsal Ancho Aislamiento',
+                svgType: 'pullover',
+                instructions: 'Brazos casi rectos. Empuja la barra desde los ojos hasta tus muslos.',
+                jointTip: 'Enfoque en conectar con el dorsal sin flexionar demasiado el codo.'
+            },
+            dips: {
+                id: 'dips',
+                name: 'Fondos (Dips) en Paralelas / Máquina',
+                target: 'Tríceps & Pecho Inferior',
+                svgType: 'dips',
+                instructions: 'Mantén el cuerpo vertical para priorizar tríceps. Baja hasta los 90° de codo.',
+                jointTip: 'Si sientes molestia en la clavícula o esternón, realiza fondos en máquina asistida.'
+            },
+            hammer_curl: {
+                id: 'hammer_curl',
+                name: 'Curl Martillo (Hammer Curl)',
+                target: 'Braquial & Antebrazo',
+                svgType: 'hammer_curl',
+                instructions: 'Agarre neutro (palmas enfrentadas). Sube potente y baja fluido.',
+                jointTip: 'Fortalece la articulación del codo para el gesto del lanzamiento en deportes.'
+            }
+        };
+
+        const WORKOUT_SPLIT = [
+            {
+                dayId: 1,
+                title: "Día 1: Pectoral & Brazos",
+                focus: "Bombeo intenso en todo el tren superior frontal.",
+                exercises: ['db_press', 'cable_crossover', 'incline_db_press', 'barbell_curl', 'preacher_curl', 'tricep_rope', 'overhead_tricep']
+            },
+            {
+                dayId: 2,
+                title: "Día 2: Pierna Funcional & Abdomen",
+                focus: "Potencia, equilibrio y estabilidad para baloncesto/sóftbol.",
+                exercises: ['leg_press', 'lunges', 'hamstring_curl', 'calf_raises', 'plank', 'hanging_leg_raises']
+            },
+            {
+                dayId: 3,
+                title: "Día 3: Hombros & Trapecios",
+                focus: "Amplitud y desarrollo de hombro 3D.",
+                exercises: ['military_press', 'lateral_raises', 'rear_delt_fly', 'front_raises', 'shrugs']
+            },
+            {
+                dayId: 4,
+                title: "Día 4: Espalda & Recordatorio Brazos",
+                focus: "Amplitud dorsal en V y volumen complementario en arms.",
+                exercises: ['lat_pulldown', 'seated_row', 'pulldown_pullover', 'dips', 'hammer_curl']
+            }
+        ];
+
+        const MOTIVATIONAL_TIPS = [
+            "La hipertrofia requiere sobrecarga progresiva. Registra tus pesos y busca mejorar 1 repetición cada semana.",
+            "A los 36 años, el descanso es tan vital como el entreno. Durmiendo 7-8h aseguras la reconstrucción muscular.",
+            "Técnica antes que peso: la tensión mecánica de calidad es lo que realmente rompe fibras musculares.",
+            "Consume al menos 35-40g de proteína en tu comida posterior al entrenamiento para activar la síntesis proteica.",
+            "Los días de descanso activo benefician el retorno venoso y limpian los residuos metabólicos de las piernas."
+        ];
+
+        // MAIN APP LOGIC CLASS
+        class WorkoutApp {
+            constructor() {
+                this.storageKey = 'physique_90days_state_v1';
+                this.state = this.loadState();
+                this.timerInterval = null;
+                this.currentCalMonth = 1;
+
+                this.init();
+            }
+
+            loadState() {
+                const defaultState = {
+                    startDate: new Date().toISOString().split('T')[0],
+                    dailyMinutes: 60,
+                    scheduledDays: [1, 2, 4, 5], // Mon, Tue, Thu, Fri (0=Sun, 1=Mon...)
+                    completedDays: {}, // { '2026-11-25': { dayId: 1, exercisesDone: ['db_press'], finished: true } }
+                    userWeight: 80,
+                    streak: 0,
+                    setupDone: false
+                };
+                const saved = localStorage.getItem(this.storageKey);
+                return saved ? { ...defaultState, ...JSON.parse(saved) } : defaultState;
+            }
+
+            saveState() {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.state));
+                this.updateUI();
+            }
+
+            init() {
+                this.bindEvents();
+                this.calculateMacros();
+                this.updateUI();
+
+                // Check setup status
+                if (!this.state.setupDone) {
+                    document.getElementById('setupPromptCard').classList.remove('hidden');
+                }
+            }
+
+            bindEvents() {
+                // Navigation Tabs
+                document.querySelectorAll('#mainTabs .tab-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const tabTarget = btn.getAttribute('data-tab');
+                        this.navigateTo(tabTarget);
+                    });
+                });
+
+                document.getElementById('btnOpenSettings').addEventListener('click', () => this.openSettingsModal());
+                document.getElementById('btnOpenSettingsMobile').addEventListener('click', () => this.openSettingsModal());
+            }
+
+            navigateTo(tabName) {
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    if (b.getAttribute('data-tab') === tabName) {
+                        b.classList.add('bg-brand-600', 'text-white', 'shadow');
+                        b.classList.remove('text-slate-400', 'hover:bg-slate-800/50');
+                    } else {
+                        b.classList.remove('bg-brand-600', 'text-white', 'shadow');
+                        b.classList.add('text-slate-400', 'hover:bg-slate-800/50');
+                    }
+                });
+
+                document.querySelectorAll('.view-content').forEach(view => {
+                    view.classList.add('hidden');
+                });
+                document.getElementById(`view-${tabName}`).classList.remove('hidden');
+
+                if (tabName === 'workout') {
+                    this.renderWorkoutView();
+                } else if (tabName === 'calendar') {
+                    this.renderCalendarView();
+                }
+            }
+
+            // GETTER FOR CURRENT DAY METRICS
+            getCalculatedMetrics() {
+                const start = new Date(this.state.startDate);
+                const today = new Date();
+                
+                // Clear hours for comparison
+                start.setHours(0,0,0,0);
+                today.setHours(0,0,0,0);
+
+                const diffTime = today.getTime() - start.getTime();
+                const diffDays = Math.floor(diffTime / (1000 * 3600 * 24)) + 1;
+                
+                const currentDayNumber = Math.max(1, Math.min(90, diffDays));
+                const currentWeek = Math.ceil(currentDayNumber / 7);
+
+                // Phase Calculation
+                let phase = 1;
+                let phaseTitle = "Mes 1: Adaptación e Hipertrofia Base";
+                let phaseWeeks = "Semanas 1-4 (10-12 reps)";
+                let repRange = "10-12";
+                let restTime = "60-75s";
+
+                if (currentWeek >= 5 && currentWeek <= 8) {
+                    phase = 2;
+                    phaseTitle = "Mes 2: Intensificación y Volumen";
+                    phaseWeeks = "Semanas 5-8 (8-10 reps)";
+                    repRange = "8-10";
+                    restTime = "75-90s";
+                } else if (currentWeek >= 9) {
+                    phase = 3;
+                    phaseTitle = "Mes 3: Especialización y Densidad";
+                    phaseWeeks = "Semanas 9-12 (12-15 reps + Dropsets)";
+                    repRange = "12-15 + Dropset";
+                    restTime = "60s (90s Dropset)";
+                }
+
+                // Determine Today's Workout Routine from Split based on days sequence
+                // We map days based on index of scheduled days
+                const dayOfWeek = today.getDay(); // 0-6
+                const isScheduledWorkoutToday = this.state.scheduledDays.includes(dayOfWeek);
+
+                // Map which split day corresponds to today
+                let splitDayObj = WORKOUT_SPLIT[0];
+                if (isScheduledWorkoutToday) {
+                    const scheduledIdx = this.state.scheduledDays.indexOf(dayOfWeek);
+                    splitDayObj = WORKOUT_SPLIT[scheduledIdx % WORKOUT_SPLIT.length];
+                }
+
+                return {
+                    currentDayNumber,
+                    currentWeek,
+                    phase,
+                    phaseTitle,
+                    phaseWeeks,
+                    repRange,
+                    restTime,
+                    isScheduledWorkoutToday,
+                    splitDayObj
+                };
+            }
+
+            updateUI() {
+                const metrics = this.getCalculatedMetrics();
+
+                // Header Stats
+                const completedCount = Object.keys(this.state.completedDays).length;
+                const progressPct = Math.round((completedCount / 90) * 100);
+                document.getElementById('headerProgressPct').innerText = `${progressPct}%`;
+                document.getElementById('headerStreak').innerText = `${this.state.streak} días`;
+
+                // Dashboard Stats
+                document.getElementById('dashCurrentDay').innerText = metrics.currentDayNumber;
+                document.getElementById('dashDayProgressBar').style.width = `${(metrics.currentDayNumber / 90) * 100}%`;
+                document.getElementById('dashCurrentPhase').innerText = metrics.phaseTitle;
+                document.getElementById('dashPhaseWeeks').innerText = metrics.phaseWeeks;
+                document.getElementById('dashCompletedDays').innerText = completedCount;
+                document.getElementById('dashRemainingDays').innerText = `${90 - metrics.currentDayNumber} días restantes`;
+
+                const totalMins = completedCount * (parseInt(this.state.dailyMinutes) || 60);
+                document.getElementById('dashTotalTime').innerText = totalMins;
+                document.getElementById('dashDailyTarget').innerText = `Meta: ${this.state.dailyMinutes}m / sesión`;
+
+                // Today Workout Card in Dash
+                const todayKey = new Date().toISOString().split('T')[0];
+                const todayRecord = this.state.completedDays[todayKey];
+
+                if (!metrics.isScheduledWorkoutToday) {
+                    document.getElementById('dashTodayTitle').innerText = "Día de Descanso Activo / Deporte";
+                    document.getElementById('dashTodayFocus').innerText = "Recuperación muscular sagrada. Practica baloncesto, sóftbol o realiza caminata ligera.";
+                    document.getElementById('dashTodayStatusBadge').className = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5";
+                    document.getElementById('dashTodayStatusBadge').innerHTML = `<i class="fa-solid fa-leaf"></i> Descanso Activo`;
+                    document.getElementById('dashTodayExerciseList').innerHTML = `<span class="text-xs text-slate-400">Sin pesas hoy. Hidrátate y duerme 7-8 horas.</span>`;
+                    document.getElementById('dailyReminderBar').classList.add('hidden');
+                } else {
+                    document.getElementById('dashTodayTitle').innerText = metrics.splitDayObj.title;
+                    document.getElementById('dashTodayFocus').innerText = metrics.splitDayObj.focus;
+                    
+                    if (todayRecord && todayRecord.finished) {
+                        document.getElementById('dashTodayStatusBadge').className = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5";
+                        document.getElementById('dashTodayStatusBadge').innerHTML = `<i class="fa-solid fa-check-double"></i> Completado Hoy`;
+                        document.getElementById('dailyReminderBar').classList.add('hidden');
+                    } else {
+                        document.getElementById('dashTodayStatusBadge').className = "bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5";
+                        document.getElementById('dashTodayStatusBadge').innerHTML = `<i class="fa-solid fa-clock"></i> Pendiente para Hoy`;
+                        document.getElementById('dailyReminderBar').classList.remove('hidden');
+                    }
+
+                    // Render pills
+                    const pillsHtml = metrics.splitDayObj.exercises.map(exId => {
+                        const ex = MASTER_EXERCISES[exId];
+                        return `<span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded-md border border-slate-700">${ex ? ex.name : exId}</span>`;
+                    }).join('');
+                    document.getElementById('dashTodayExerciseList').innerHTML = pillsHtml;
+                }
+
+                document.getElementById('dashExerciseCount').innerText = metrics.isScheduledWorkoutToday ? metrics.splitDayObj.exercises.length : 0;
+                document.getElementById('dashRepRange').innerText = metrics.repRange;
+
+                // Phase Details Box
+                let phaseDesc = '';
+                if (metrics.phase === 1) {
+                    phaseDesc = `
+                        <p>• <strong>Objetivo:</strong> Adaptación de articulaciones y aprendizaje de técnica perfecta con tiempo bajo tensión.</p>
+                        <p>• <strong>Rango Reps:</strong> 10-12 por serie (Cargas moderadas, sin ir al fallo excesivo).</p>
+                        <p>• <strong>Descanso:</strong> 60 a 75 segundos entre series.</p>
+                    `;
+                } else if (metrics.phase === 2) {
+                    phaseDesc = `
+                        <p>• <strong>Objetivo:</strong> Intensificación y ruptura de fibras musculares incrementando carga.</p>
+                        <p>• <strong>Rango Reps:</strong> 8-10 por serie (Llegar al fallo técnico en la última serie).</p>
+                        <p>• <strong>Descanso:</strong> 75 a 90 segundos entre series para recuperación de ATP.</p>
+                    `;
+                } else {
+                    phaseDesc = `
+                        <p>• <strong>Objetivo:</strong> Máximo bombeo (pump), vascularización y detalle muscular 3D.</p>
+                        <p>• <strong>Rango Reps:</strong> 12-15 por serie + Técnica de Drop-set en última serie.</p>
+                        <p>• <strong>Descanso:</strong> 60s normales, 90s tras drop-set.</p>
+                    `;
+                }
+                document.getElementById('dashPhaseDetails').innerHTML = phaseDesc;
+
+                // Motivational Tip
+                const tipIdx = (metrics.currentDayNumber - 1) % MOTIVATIONAL_TIPS.length;
+                document.getElementById('dailyMotivationalTip').innerText = `"${MOTIVATIONAL_TIPS[tipIdx]}"`;
+            }
+
+            // RENDER WORKOUT VIEW
+            renderWorkoutView() {
+                const metrics = this.getCalculatedMetrics();
+                const todayKey = new Date().toISOString().split('T')[0];
+                const todayRecord = this.state.completedDays[todayKey] || { exercisesDone: [], finished: false };
+
+                document.getElementById('workoutDayPhaseTag').innerText = `${metrics.phaseTitle} • Semana ${metrics.currentWeek}`;
+                document.getElementById('workoutTitle').innerText = metrics.isScheduledWorkoutToday ? metrics.splitDayObj.title : "Día de Descanso Activo";
+                document.getElementById('workoutFocus').innerText = metrics.isScheduledWorkoutToday ? metrics.splitDayObj.focus : "Hoy no hay rutina pesada de gym programada.";
+                document.getElementById('restRecommendedTime').innerText = metrics.restTime;
+
+                const container = document.getElementById('exercisesContainer');
+                container.innerHTML = '';
+
+                if (!metrics.isScheduledWorkoutToday) {
+                    container.innerHTML = `
+                        <div class="glass-panel p-8 rounded-2xl text-center space-y-4">
+                            <div class="w-16 h-16 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-2xl">
+                                <i class="fa-solid fa-heart-pulse"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">¡Día de Recuperación Activa!</h3>
+                            <p class="text-sm text-slate-300 max-w-md mx-auto">
+                                Tu plan de 4 días de entrenamiento te otorga este día para recuperar articulaciones y masa muscular. Puedes jugar baloncesto, sóftbol o realizar movilidad suave.
+                            </p>
+                        </div>
+                    `;
+                    document.getElementById('workoutProgressText').innerText = "Descanso";
+                    return;
+                }
+
+                const totalEx = metrics.splitDayObj.exercises.length;
+                const completedExCount = todayRecord.exercisesDone ? todayRecord.exercisesDone.length : 0;
+                document.getElementById('workoutProgressText').innerText = `${completedExCount} / ${totalEx} completados`;
+
+                metrics.splitDayObj.exercises.forEach((exId, index) => {
+                    const ex = MASTER_EXERCISES[exId];
+                    if (!ex) return;
+
+                    const isDone = todayRecord.exercisesDone && todayRecord.exercisesDone.includes(exId);
+                    
+                    // Series count based on phase
+                    let seriesText = (metrics.phase === 2) ? "4 Series" : "3-4 Series";
+                    if (metrics.phase === 3) seriesText = "3 Series + 1 Drop-set";
+
+                    const card = document.createElement('div');
+                    card.className = `glass-panel p-5 rounded-2xl border transition-all duration-200 ${isDone ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-slate-800 hover:border-slate-700'}`;
+                    
+                    card.innerHTML = `
+                        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                            <div class="flex items-start space-x-4">
+                                <button onclick="app.toggleExerciseDone('${exId}')" class="mt-1 w-7 h-7 rounded-lg border flex items-center justify-center transition-all ${isDone ? 'bg-emerald-500 border-emerald-500 text-slate-950 font-bold' : 'border-slate-600 text-transparent hover:border-brand-500'}">
+                                    <i class="fa-solid fa-check text-sm"></i>
+                                </button>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs font-mono text-slate-400">#${index + 1}</span>
+                                        <h4 class="font-bold text-base text-white ${isDone ? 'line-through text-slate-400' : ''}">${ex.name}</h4>
+                                    </div>
+                                    <p class="text-xs text-brand-400 font-semibold mt-0.5">${ex.target}</p>
+                                    <div class="flex flex-wrap gap-3 mt-2 text-xs text-slate-300">
+                                        <span class="bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700"><i class="fa-solid fa-layer-group text-brand-400 mr-1"></i>${seriesText}</span>
+                                        <span class="bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700"><i class="fa-solid fa-repeat text-amber-400 mr-1"></i>${metrics.repRange} reps</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-2 w-full md:w-auto justify-end pt-3 md:pt-0 border-t md:border-t-0 border-slate-800">
+                                <button onclick="app.openExerciseModal('${exId}')" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                                    <i class="fa-solid fa-circle-info text-brand-400"></i> Ver Ilustración & Técnica
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            toggleExerciseDone(exId) {
+                const todayKey = new Date().toISOString().split('T')[0];
+                if (!this.state.completedDays[todayKey]) {
+                    this.state.completedDays[todayKey] = { dayId: this.getCalculatedMetrics().splitDayObj.dayId, exercisesDone: [], finished: false };
+                }
+
+                const rec = this.state.completedDays[todayKey];
+                const idx = rec.exercisesDone.indexOf(exId);
+                
+                if (idx > -1) {
+                    rec.exercisesDone.splice(idx, 1);
+                    rec.finished = false;
+                } else {
+                    rec.exercisesDone.push(exId);
+                }
+
+                // If all done automatically
+                const metrics = this.getCalculatedMetrics();
+                if (metrics.isScheduledWorkoutToday && rec.exercisesDone.length >= metrics.splitDayObj.exercises.length) {
+                    rec.finished = true;
+                    this.state.streak += 1;
+                }
+
+                this.saveState();
+                this.renderWorkoutView();
+            }
+
+            finishTodayWorkout() {
+                const todayKey = new Date().toISOString().split('T')[0];
+                const metrics = this.getCalculatedMetrics();
+                
+                if (!metrics.isScheduledWorkoutToday) {
+                    alert("Hoy es un día de descanso activo programado.");
+                    return;
+                }
+
+                if (!this.state.completedDays[todayKey]) {
+                    this.state.completedDays[todayKey] = { dayId: metrics.splitDayObj.dayId, exercisesDone: [], finished: false };
+                }
+
+                const rec = this.state.completedDays[todayKey];
+                rec.exercisesDone = [...metrics.splitDayObj.exercises];
+                rec.finished = true;
+                this.state.streak += 1;
+
+                this.saveState();
+                this.renderWorkoutView();
+
+                // Sound Effect tone.js
+                try {
+                    const synth = new Tone.Synth().toDestination();
+                    synth.triggerAttackRelease("C5", "8n");
+                } catch(e){}
+
+                alert("¡Felicidades! Has completado el entrenamiento de hoy. Tu constancia construirá el cuerpo que buscas.");
+            }
+
+            // REST TIMER LOGIC
+            startRestTimer(seconds) {
+                this.stopRestTimer();
+                let remaining = seconds;
+                const display = document.getElementById('timerDisplay');
+                
+                const updateStr = (s) => {
+                    const mins = Math.floor(s / 60);
+                    const secs = s % 60;
+                    display.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                };
+
+                updateStr(remaining);
+                this.timerInterval = setInterval(() => {
+                    remaining--;
+                    if (remaining <= 0) {
+                        this.stopRestTimer();
+                        updateStr(0);
+                        // Beep alert
+                        try {
+                            const synth = new Tone.Synth().toDestination();
+                            synth.triggerAttackRelease("G4", "4n");
+                        } catch(e){}
+                    } else {
+                        updateStr(remaining);
+                    }
+                }, 1000);
+            }
+
+            stopRestTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+            }
+
+            // RENDER CALENDAR VIEW
+            filterCalendarMonth(monthNum) {
+                this.currentCalMonth = monthNum;
+                [1,2,3].forEach(m => {
+                    const btn = document.getElementById(`btnMonth${m}`);
+                    if (m === monthNum) {
+                        btn.className = "px-4 py-2 rounded-lg text-sm font-bold bg-brand-600 text-white";
+                    } else {
+                        btn.className = "px-4 py-2 rounded-lg text-sm font-bold bg-slate-800 text-slate-400 hover:text-white";
+                    }
+                });
+                this.renderCalendarView();
+            }
+
+            renderCalendarView() {
+                const grid = document.getElementById('calendarGrid');
+                grid.innerHTML = '';
+
+                const startDay = (this.currentCalMonth - 1) * 30 + 1;
+                const endDay = Math.min(90, this.currentCalMonth * 30);
+                const startDateObj = new Date(this.state.startDate);
+
+                for (let dayNum = startDay; dayNum <= endDay; dayNum++) {
+                    const targetDate = new Date(startDateObj);
+                    targetDate.setDate(startDateObj.getDate() + (dayNum - 1));
+                    const dateStr = targetDate.toISOString().split('T')[0];
+                    const dayOfWeek = targetDate.getDay();
+
+                    const isWorkoutDay = this.state.scheduledDays.includes(dayOfWeek);
+                    const isCompleted = this.state.completedDays[dateStr] && this.state.completedDays[dateStr].finished;
+                    
+                    const isToday = new Date().toISOString().split('T')[0] === dateStr;
+
+                    const dayCard = document.createElement('div');
+                    let bgClass = "bg-slate-900 border-slate-800";
+                    
+                    if (isCompleted) {
+                        bgClass = "bg-emerald-950/40 border-emerald-500/50 text-emerald-300";
+                    } else if (isToday) {
+                        bgClass = "bg-brand-950/50 border-brand-500 text-white ring-2 ring-brand-500/30";
+                    } else if (!isWorkoutDay) {
+                        bgClass = "bg-slate-900/40 border-slate-800/60 opacity-60";
+                    }
+
+                    dayCard.className = `p-3 rounded-xl border flex flex-col justify-between h-24 ${bgClass} transition hover:scale-105`;
+                    
+                    dayCard.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-bold font-mono">Día ${dayNum}</span>
+                            ${isCompleted ? '<i class="fa-solid fa-circle-check text-emerald-400 text-xs"></i>' : ''}
+                            ${!isCompleted && isToday ? '<span class="px-1.5 py-0.5 rounded text-[10px] bg-brand-500 text-white font-bold">HOY</span>' : ''}
+                        </div>
+                        <div class="text-[11px] font-medium truncate">
+                            ${isWorkoutDay ? (isCompleted ? 'Completado' : 'Entrenamiento') : 'Descanso'}
+                        </div>
+                        <div class="text-[10px] text-slate-400">
+                            ${targetDate.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' })}
+                        </div>
+                    `;
+
+                    grid.appendChild(dayCard);
+                }
+            }
+
+            // MODAL HANDLING
+            openSettingsModal() {
+                document.getElementById('setupStartDate').value = this.state.startDate;
+                document.getElementById('setupDailyTime').value = this.state.dailyMinutes;
+                
+                // Checkboxes
+                const checkboxes = document.querySelectorAll('input[name="workoutDay"]');
+                checkboxes.forEach(cb => {
+                    cb.checked = this.state.scheduledDays.includes(parseInt(cb.value));
+                });
+
+                document.getElementById('settingsModal').classList.remove('hidden');
+            }
+
+            closeSettingsModal() {
+                document.getElementById('settingsModal').classList.add('hidden');
+            }
+
+            saveSettings(e) {
+                e.preventDefault();
+                const startDate = document.getElementById('setupStartDate').value;
+                const dailyMinutes = document.getElementById('setupDailyTime').value;
+
+                const checkedDays = Array.from(document.querySelectorAll('input[name="workoutDay"]:checked'))
+                    .map(cb => parseInt(cb.value));
+
+                if (checkedDays.length === 0) {
+                    alert("Por favor selecciona al menos un día a la semana.");
+                    return;
+                }
+
+                this.state.startDate = startDate;
+                this.state.dailyMinutes = dailyMinutes;
+                this.state.scheduledDays = checkedDays;
+                this.state.setupDone = true;
+
+                this.saveState();
+                this.closeSettingsModal();
+                document.getElementById('setupPromptCard').classList.add('hidden');
+                
+                alert("Configuración guardada exitosamente. Tu plan se ha sincronizado.");
+            }
+
+            openExerciseModal(exId) {
+                const ex = MASTER_EXERCISES[exId];
+                if (!ex) return;
+
+                document.getElementById('exModalTitle').innerText = ex.name;
+                document.getElementById('exModalInstructions').innerText = ex.instructions;
+                document.getElementById('exModalJointTip').innerText = ex.jointTip;
+
+                // Render Vector Graphic
+                const svgContainer = document.getElementById('exModalGraphicContainer');
+                svgContainer.innerHTML = this.generateExerciseSVG(ex.svgType);
+
+                document.getElementById('exerciseModal').classList.remove('hidden');
+            }
+
+            closeExerciseModal() {
+                document.getElementById('exerciseModal').classList.add('hidden');
+            }
+
+            calculateMacros() {
+                const weight = parseFloat(document.getElementById('inputUserWeight').value) || 80;
+                const minProt = Math.round(weight * 1.8);
+                const maxProt = Math.round(weight * 2.0);
+                
+                document.getElementById('calcProtein').innerText = `${minProt}g - ${maxProt}g / día`;
+                
+                const minWater = (weight * 0.035).toFixed(1);
+                const maxWater = (weight * 0.040).toFixed(1);
+                document.getElementById('calcWater').innerText = `${minWater} - ${maxWater} Litros`;
+            }
+
+            // SVG GRAPHICS GENERATOR FOR EXERCISES
+            generateExerciseSVG(type) {
+                // Vector representations for visual clarity
+                return `
+                <svg viewBox="0 0 200 120" class="w-full h-full p-4">
+                    <rect width="200" height="120" fill="#0f172a"/>
+                    <!-- Bench/Ground -->
+                    <line x1="20" y1="90" x2="180" y2="90" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+                    
+                    <!-- Figure Schematic -->
+                    <g stroke="#3b82f6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+                        <circle cx="100" cy="35" r="12" stroke="#f59e0b" fill="#1e293b"/>
+                        <path d="M100 47 L100 75 M80 55 L100 47 L120 55 M100 75 L85 90 M100 75 L115 90"/>
+                    </g>
+                    <!-- Weights / Movement lines -->
+                    <g fill="#10b981">
+                        <circle cx="70" cy="45" r="6"/>
+                        <circle cx="130" cy="45" r="6"/>
+                    </g>
+                    <text x="100" y="110" font-family="sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">Guía Mecánica de Contracción</text>
+                </svg>
+                `;
+            }
+        }
+
+        // Initialize App on DOM Load
+        let app;
+        window.addEventListener('DOMContentLoaded', () => {
+            app = new WorkoutApp();
+        });
+    </script>
+</body>
+</html>
